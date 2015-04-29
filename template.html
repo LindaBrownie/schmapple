@@ -81,6 +81,10 @@
 				for (var i = 0; i < objects.length; i++) {
 					var object = objects[i];
 					
+					if(basket.collidesWith(object)){
+						object.setPosition(Math.random() * 600, -200);
+					}
+					
 					object.update();
 					//object.y += spawnRateOfDescent;
 				}
