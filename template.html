@@ -15,11 +15,13 @@
 			var previousKeyLeft = false;
 			var accelerometer;
 			var launchTimer = 0;
+			var scoreCount = 0;
+			var theBackground;
 			
 			// spawn a new object every 1500ms
-			var spawnRate = 700;
+			var spawnRate = 7000;
 			// set how fast the objects will fall
-			var spawnRateOfDescent = 2.00;
+			var spawnRateOfDescent = 1.00;
 			// when was the last object spawned
 			var lastSpawn = -1;
 			// this array holds all spawned object
@@ -47,11 +49,13 @@
 			function init(){
 				scene = new Scene();
 				//loop and random number
+				theBackground = new Background(scene);
 				fallingObject = new FallingObject(scene);
 				basket = new Basket(scene);
 				
 				scene.start();
 
+				theBackground.init();
 				basket.init();
 				fallingObject.init();
 			} // end init
@@ -61,14 +65,7 @@
 
 				//handle events here
 				basket.checkKeys();
-				
-				/*if(basket.collidesWith(fallingObject)){
-					fallingObject.setPosition(Math.random() * 600, -200);
-				}*/
-				/*if(launchTimer === 80){
-				  fallingObject.launchOne();
-				  launchTimer = 0;
-				}*/
+
 				// get the elapsed time
 				var time = Date.now();
 
@@ -78,10 +75,12 @@
 					spawnRandomObject();
 				}
 				
+				//update all the sprites
 				for (var i = 0; i < objects.length; i++) {
 					var object = objects[i];
 					
 					if(basket.collidesWith(object)){
+						scoreCount++;
 						object.setPosition(Math.random() * 600, -200);
 					}
 					
@@ -89,43 +88,28 @@
 					//object.y += spawnRateOfDescent;
 				}
 				
-				//update all the sprites
-				//fallingObject.update(scene);
+				theBackground.update();
 				basket.update();
+				updateScore();
 				launchTimer++;
 			}
 			
 			function spawnRandomObject() {
-				// select a random type for this new object
-				//var t;
-
-				// About Math.random()
-				// Math.random() generates a semi-random number
-				// between 0-1. So to randomly decide if the next object
-				// will be A or B, we say if the random# is 0-.49 we
-				// create A and if the random# is .50-1.00 we create B
-
-				/*if (Math.random() < 0.50) {
-					t = "red";
-				} else {
-					t = "blue";
-				}*/
-
-				// create the new object
-				/*var object = {
-					// set this objects type
-					type: t,
-					// set x randomly but at least 15px off the canvas edges
-					x: Math.random() * (canvas.width - 30) + 15,
-					// set y to start on the line where objects are spawned
-					y: spawnLineY,
-				}*/
-
 				fallingObject = new FallingObject(scene);
 				fallingObject.init();
 				// add the new object to the objects[] array
 				objects.push(fallingObject);
 			}
+			
+			function updateScore(){
+				var fontFamily = "Courier New";
+				var fontSize = "20";
+				var fontColor = "#ee0000";
+				var message = "Apples Schmapped: " + scoreCount.toString();
+				
+				theBackground.writeText(fontFamily, fontSize, fontColor, message, 10, 60);
+			}
+			
 		</script>
 	</head>
 	<body onload = "init()">

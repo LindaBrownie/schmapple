@@ -34,14 +34,8 @@ function FallingObject(scene){
 	
     tempFallingObject.init = function(){
 
-        //var MIN_WIDTH = this.cWidth/20;
-        //var MAX_WIDTH = this.cWidth/15;
-
         var width = 60;
         var xPosition = Math.random() * this.cWidth + width/2;
-		//var yPosition = Math.random() * this.cWidth + width/2;
-
-        //allows sprite to go off screen
 
         //allows sprite to go off screen
         this.setBoundAction(CONTINUE);
@@ -50,7 +44,7 @@ function FallingObject(scene){
         this.setSpeed(5);
         this.setMoveAngle(180);
         //this.setImgAngle(90);
-        //this.changeImgAngleBy(Math.floor(Math.random()*50)-25);
+        this.changeImgAngleBy(Math.floor(Math.random()*50)-25);
     };
 	
 	/*this.update = function(){
@@ -190,4 +184,20 @@ function Basket(scene){
 	};
 
 	return sprite2;
+}
+
+function Background(scene){
+
+    var sprite = new EnhancedSprite(scene, "./img/image_transparent.png", 800, 600);
+
+    sprite.init = function(){
+        this.setX(this.cWidth/2 );
+        this.setY(this.cHeight/2);
+        this.setSpeed(0);
+        this.width = this.cWidth;
+        this.height = this.cHeight;
+        //this.setMoveAngle(180);
+    };
+
+    return sprite;
 }
