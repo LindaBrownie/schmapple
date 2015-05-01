@@ -92,7 +92,23 @@ function Basket(scene, joyStick){
 		var newDy = 0;
 
 		if(joystickVirtual){
+			var LANDSCAPE_PRIMARY = 90;
+			var LANDSCAPE_SECONDARY = -90;
+			var PORTRAIT_PRIMARY = 0;
+
 			newDx = joystickVirtual.getDiffX();
+			
+            if(window_orientation === LANDSCAPE_PRIMARY){
+                newDx = accelerometer.getAY();
+            }
+            else if(window_orientation === -LANDSCAPE_SECONDARY){
+                newDx =accelerometer.getAY() * -1; //flip it
+            }else if(window_orientation === PORTRAIT_PRIMARY){
+                newDx =  Math.abs(accelerometer.getAY() ) - 9; //4.5 is the dx in portrait mode
+            }
+            else{
+                newDx = 9 - Math.abs(accelerometer.getAY() );
+            }
 		}
 			
 		if(keysDown[K_LEFT] || newDx > 0)
