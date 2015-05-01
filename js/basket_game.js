@@ -99,15 +99,15 @@ function Basket(scene, joyStick){
 			newDx = joystickVirtual.getDiffX();
 			
             if(window_orientation === LANDSCAPE_PRIMARY){
-                newDx = accelerometer.getAY();
+                newDx = joystickVirtual.getDiffY();
             }
             else if(window_orientation === -LANDSCAPE_SECONDARY){
-                newDx =accelerometer.getAY() * -1; //flip it
+                newDx = joystickVirtual.getDiffY() * -1; //flip it
             }else if(window_orientation === PORTRAIT_PRIMARY){
-                newDx =  Math.abs(accelerometer.getAY() ) - 9; //4.5 is the dx in portrait mode
+                newDx =  Math.abs(joystickVirtual.getDiffY()) - 9; //4.5 is the dx in portrait mode
             }
             else{
-                newDx = 9 - Math.abs(accelerometer.getAY() );
+                newDx = 9 - Math.abs(joystickVirtual.getDiffY());
             }
 		}
 			
