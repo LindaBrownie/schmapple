@@ -10,24 +10,20 @@
 			var scene;
 			var fallingObject;
 			var basket;
-			var accel;
-			var window_orientation = 90;
-			var previousKeyLeft = false;
-			var accelerometer;
-			var launchTimer = 0;
-			var scoreCount = 0;
 			var theBackground;
+			var joy;
+			
+			var window_orientation = 90;
+			var scoreCount = 0;
 			
 			// spawn a new object every 1500ms
 			var spawnRate = 7000;
 			// set how fast the objects will fall
-			var spawnRateOfDescent = 1.00;
+			var spawnRateOfDescent = 2.00;
 			// when was the last object spawned
 			var lastSpawn = -1;
 			// this array holds all spawned object
 			var objects = [];
-			// save the starting time (used to calc elapsed time)
-			var startTime = Date.now();
 			
 			window.addEventListener("orientationchange", function() {
 				window_orientation = window.orientation;
@@ -51,7 +47,12 @@
 				//loop and random number
 				theBackground = new Background(scene);
 				fallingObject = new FallingObject(scene);
-				basket = new Basket(scene);
+				
+				if(scene.touchable){
+					joy = new Joy();
+				}
+				
+				basket = new Basket(scene, joy);
 				
 				scene.start();
 
@@ -66,11 +67,13 @@
 				//handle events here
 				basket.checkKeys();
 
+				theBackground.update();
+				
 				// get the elapsed time
 				var time = Date.now();
 
 				// see if its time to spawn a new object
-				if (time > (lastSpawn + spawnRate) && objects.length < 15) {
+				if (time > (lastSpawn + spawnRate)) {
 					lastSpawn = time;
 					spawnRandomObject();
 				}
@@ -78,20 +81,19 @@
 				//update all the sprites
 				for (var i = 0; i < objects.length; i++) {
 					var object = objects[i];
-					
+						
 					if(basket.collidesWith(object)){
 						scoreCount++;
-						object.setPosition(Math.random() * 600, -200);
+						object.setPosition(Math.random() * 700, -225);
+						object.setSpeed(object.getSpeed() + 1);
 					}
 					
 					object.update();
-					//object.y += spawnRateOfDescent;
+					object.y += spawnRateOfDescent;
 				}
 				
-				theBackground.update();
 				basket.update();
 				updateScore();
-				launchTimer++;
 			}
 			
 			function spawnRandomObject() {
@@ -102,12 +104,15 @@
 			}
 			
 			function updateScore(){
-				var fontFamily = "Courier New";
-				var fontSize = "20";
+				var fontFamily = "Courier";
+				var fontSize = "18";
 				var fontColor = "#ee0000";
-				var message = "Apples Schmapped: " + scoreCount.toString();
 				
+				var message = "Apples";
 				theBackground.writeText(fontFamily, fontSize, fontColor, message, 10, 60);
+				
+				message = "Schmapped: " + scoreCount.toString();
+				theBackground.writeText(fontFamily, fontSize, fontColor, message, 10, 80);
 			}
 			
 		</script>

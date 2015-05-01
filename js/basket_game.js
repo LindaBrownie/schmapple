@@ -36,12 +36,13 @@ function FallingObject(scene){
 
         var width = 60;
         var xPosition = Math.random() * this.cWidth + width/2;
+		var yPosition = -Math.random();
 
         //allows sprite to go off screen
         this.setBoundAction(CONTINUE);
         //this.width = width;
-        this.setPosition(xPosition, 0);
-        this.setSpeed(5);
+        this.setPosition(xPosition, yPosition);
+        this.setSpeed(3);
         this.setMoveAngle(180);
         //this.setImgAngle(90);
         this.changeImgAngleBy(Math.floor(Math.random()*50)-25);
@@ -73,117 +74,90 @@ function FallingObject(scene){
     return tempFallingObject;
 }
 
-/********************************************************************
- *
- * FallingObjectManager
- *
- *******************************************************************/
-function FallingObjectManager(scene){
-
-    //TODO: put all configurable settings in one file called settings js
-    var fallingOjects = [];
-    var MAX_OBJECTS = 15; //must be divisible by 3
-	var fallingObject;	
-
-    this.init = function(scene){
-		var i;
-        for(i=0;i<MAX_OBJECTS;i++){
-            fallingOjects[i] = new FallingObject(scene);
-            fallingOjects[i].init();
-        }
-    };
-    
-	/*this.checkForBounds = function(){
-        var i = 0;
-
-        for(i =0; i < MAX_OBJECTS; i++){
-            fallingOjects[i].repositionOnBoundsCheck();
-        }
-
-        this.spaceOutObjects();
-
-    };*/
-
-    this.update = function(){
-        var i = 0;
-
-        for(i =0; i < MAX_OBJECTS; i++){
-            //fallingOjects[i].preUpdate();
-			if(fallingOjects[i].isActive() === true){
-				fallingOjects[i].update();
-			}
-        }
-
-    };
+function Basket(scene, joyStick){
+	var joystickVirtual = joyStick;
+	var boundsChecking = true;
 	
-	this.launchOne = function(){
-		var i = 0;
-		 for(i =0; i < MAX_OBJECTS; i++){
-			if(fallingOjects[i].isActive() === false){
-				fallingOjects[i].activate();
-				break;
+	var basket = new EnhancedSprite(scene, "./img/box1.png", 60, 80);
+	basket.x = 100;
+	basket.y = 575;
+	basket.init = function(){
+		this.setSpeed(0);
+		this.setBoundAction(STOP);
+	};
+
+	basket.checkKeys = function(){	
+
+		var newDx = 0;
+		var newDy = 0;
+
+		if(joystickVirtual){
+			newDx = joystickVirtual.getDiffX();
+		}
+			
+		if(keysDown[K_LEFT] || newDx > 0)
+		{
+			if(newDx > 0){
+				//need faster acceleration when using tilt as opposed to keys
+				this.addVector(270,1)
 			}
+			else{
+				this.addVector(270,1);
+			}
+		}
+
+		if(keysDown[K_RIGHT] || newDx < 0){
+			if(newDx < 0)
+				this.addVector(90,1);
+			else
+				this.addVector(90,1);
+		}
+
+		//set a max DX
+		var maxValue = 20
+		if(this.dx < -maxValue)
+			this.dx = -maxValue;
+		if(this.dx > maxValue)
+			this.dx = maxValue;
+	};
+	
+	//overrides the checkBounds
+    basket.checkBounds = function(){
+
+        var leftBound = 10 + this.width/2;
+        var rightBound = this.cWidth - (this.width/2 + 10);
+        var topBound = 50;
+        var bottomBound = this.cHeight - 40;
+
+		if(joystickVirtual){
+			 //bottom is set to 2/3 screen because of differences in mobile devices
+			//otherwise theship at the bottom can't be seen
+			bottomBound = this.cHeight - this.height;
+		}
+       
+        if(this.y < topBound){
+            this.y = topBound;
+            this.dy = 0; //remove any vector acceleration
         }
-	};
 
-    /*this.collidesWith = function(otherSprite, onCollisionCallback){
-
-        var i = 0;
-        for(i = 0 ; i < MAX_OBJECTS; i++){
-
-            if(fallingOjects[i].collidesWith(otherSprite)){
-                onCollisionCallback();
-            }
+        if(this.y > bottomBound){
+            this.y = bottomBound;
+            this.dy = 0; //affected by gravity
         }
-    };*/
-}
 
-function Basket(scene){
+        if(this.x < leftBound){
+            this.x = leftBound;
+            this.dx = 0; //remove any vector acceleration
+        }
 
-	var sprite2 = new Sprite(scene, "./img/box1.png", 60, 80);
-	sprite2.x = 100;
-	sprite2.y = 575;
-	sprite2.init = function(){
-	this.setSpeed(0);
-	this.setBoundAction(STOP);
-	};
+        if(this.x > rightBound){
+            this.x = rightBound;
+            this.dx = 0; //remove any vector acceleration
+        }
 
-	sprite2.checkKeys = function(){	
+    };
 
-	var newDx = 0;
-	var newDy = 0;
-	var LANDSCAPE_PRIMARY = 90;
-	var LANDSCAPE_SECONDARY = -90;
-	var PORTRAIT_PRIMARY = 0;
-	accel = new Accel;
-	accelerometer = accel;
-
-	if(keysDown[K_LEFT] || newDx > 0)
-	{
-	if(newDx > 0){
-	//need faster acceleration when using tilt as opposed to keys
-	this.addVector(270,1)
-	}
-	else{
-	this.addVector(270,1);
-	}
-	}
-
-	if(keysDown[K_RIGHT] || newDx < 0){
-	if(newDx < 0)
-	this.addVector(90,1);
-	else
-	this.addVector(90,1);
-	}
-
-	//set a max DX
-	if(this.dx < -7)
-	this.dx = -7;
-	if(this.dx > 7)
-	this.dx = 7;
-	};
-
-	return sprite2;
+	return basket;
 }
 
 function Background(scene){
@@ -201,3 +175,4 @@ function Background(scene){
 
     return sprite;
 }
+
