@@ -95,6 +95,7 @@ function Basket(scene, joyStick){
 			var LANDSCAPE_SECONDARY = -90;
 			var PORTRAIT_PRIMARY = 0;
 
+			basket.y = 475;
 			newDx = joystickVirtual.getDiffX();
 			
             if(window_orientation === LANDSCAPE_PRIMARY){
