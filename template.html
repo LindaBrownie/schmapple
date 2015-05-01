@@ -25,6 +25,17 @@
 			// this array holds all spawned object
 			var objects = [];
 			
+			window.addEventListener('mousedown', function(event) {
+				var mX = event.clientX - ctx.canvas.offsetLeft;
+				var mY = event.clientY - ctx.canvas.offsetTop;
+				for(var i = 0; i < objects.length; i++){
+					var b = objects[i];
+					if(mX >= b.x && mX < b.x+b.w && mY >= b.y && mY < b.y+b.h){
+						document.getElementById('status').innerHTML = "You touched "+b.id;
+					}
+				}
+			 });
+		
 			window.addEventListener("orientationchange", function() {
 				window_orientation = window.orientation;
 
