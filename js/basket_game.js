@@ -103,7 +103,8 @@ function Basket(scene, joyStick){
             }
             else if(window_orientation === LANDSCAPE_SECONDARY){
                 newDx = joystickVirtual.getDiffX(); //flip it
-            }else if(window_orientation === PORTRAIT_PRIMARY){
+            }
+			else if(window_orientation === PORTRAIT_PRIMARY){
                 newDx =  Math.abs(joystickVirtual.getDiffX()) - 9; //4.5 is the dx in portrait mode
             }
             else{
@@ -130,7 +131,7 @@ function Basket(scene, joyStick){
 		}
 
 		//set a max DX
-		var maxValue = 20
+		var maxValue = 15
 		if(this.dx < -maxValue)
 			this.dx = -maxValue;
 		if(this.dx > maxValue)

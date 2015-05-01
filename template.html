@@ -43,6 +43,9 @@
 				if(scene){
 					scene.setSize(newWidth, newHeight);
 				}
+				if(scene.touchable){
+					scene.setSize(newWidth, 400);
+				}
 
 			}, false);
 			
