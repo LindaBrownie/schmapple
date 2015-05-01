@@ -76,7 +76,6 @@ function FallingObject(scene){
 
 function Basket(scene, joyStick){
 	var joystickVirtual = joyStick;
-	var boundsChecking = true;
 	
 	var basket = new EnhancedSprite(scene, "./img/box1.png", 60, 80);
 	basket.x = 100;
@@ -101,7 +100,7 @@ function Basket(scene, joyStick){
             if(window_orientation === LANDSCAPE_PRIMARY){
                 newDx = joystickVirtual.getDiffY();
             }
-            else if(window_orientation === -LANDSCAPE_SECONDARY){
+            else if(window_orientation === LANDSCAPE_SECONDARY){
                 newDx = joystickVirtual.getDiffY() * -1; //flip it
             }else if(window_orientation === PORTRAIT_PRIMARY){
                 newDx =  Math.abs(joystickVirtual.getDiffY()) - 9; //4.5 is the dx in portrait mode
